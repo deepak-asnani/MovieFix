@@ -7,9 +7,20 @@ interface providerProps {
 }
 
 const MovieContextProvider = ({ children }: providerProps) => {
-  const [selectedGenre, setSelectedGenre] = useState(ALL_GENRE_ID);
+  const [selectedGenres, setSelectedGenres] = useState([ALL_GENRE_ID]);
+  const [genres, setGenres] = useState([]);
+  const [searchedResults, setSearchedResults] = useState({});
   return (
-    <MovieContext.Provider value={{ selectedGenre, setSelectedGenre }}>
+    <MovieContext.Provider
+      value={{
+        selectedGenres,
+        setSelectedGenres,
+        genres,
+        setGenres,
+        searchedResults,
+        setSearchedResults,
+      }}
+    >
       {children}
     </MovieContext.Provider>
   );

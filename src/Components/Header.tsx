@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Genre, GenreProps } from "../types";
 import { ALL_GENRE_ID, API_KEY, APP_TITLE, GENRES_API } from "../constants";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import MovieContext from "../context/MovieContext";
+import { searchMovie } from "../helpers";
 
 /* Genre UI starts here */
 
@@ -16,7 +17,7 @@ const GenreContainer = ({
     <div
       className={`${
         isActive ? "bg-red-600" : "bg-gray-600 "
-      } flex justify-center items-center text-white px-4 rounded-md cursor-pointer`}
+      } hover:bg-white hover:text-black flex justify-center items-center text-white px-4 py-2 rounded-md cursor-pointer whitespace-nowrap`}
       onClick={() => handleGenreClick(id)}
     >
       {name}
@@ -27,7 +28,28 @@ const GenreContainer = ({
 /* Genre UI ends here */
 
 const Header = () => {
-  const { selectedGenre, setSelectedGenre } = useContext(MovieContext);
+  const {
+    selectedGenres,
+    setSelectedGenres,
+    genres,
+    setGenres,
+    setSearchedResults,
+  } = useContext(MovieContext);
+
+  const [searchText, setSearchText] = useState("");
+
+  const {
+    data: searchedMovies,
+    isLoading: isSearching,
+    isError: searchFetchError,
+    refetch,
+  } = useQuery({
+    queryKey: ["search"],
+    queryFn: () => searchMovie(searchText),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: false,
+  });
 
   const fetchMoviesGenresList = async () => {
     const response = await fetch(GENRES_API, {
@@ -42,31 +64,110 @@ const Header = () => {
   };
 
   const {
-    data: genres,
-    isLoading: areGeresFetching,
+    data: fetchedGenres,
+    isLoading: areGenresFetching,
     isError: genresFetchError,
   } = useQuery({
     queryKey: ["moviesGenresList"],
     queryFn: fetchMoviesGenresList,
   });
 
+  useEffect(() => {
+    setGenres(fetchedGenres);
+  }, [fetchedGenres]);
+
+  useEffect(() => {
+    setSearchedResults(searchedMovies);
+  }, [searchedMovies]);
+
+  const filterPrevGenresIds = (
+    prevSelectedGenreIds: number[],
+    exclusiveGenreId: number
+  ) => {
+    const filteredPrevSelectedGenres = prevSelectedGenreIds.filter(
+      (genreId: number) => genreId !== exclusiveGenreId
+    );
+    return filteredPrevSelectedGenres;
+  };
+
   const handleGenreClick = (genreId: number) => {
-    setSelectedGenre(genreId);
+    setSelectedGenres((prevSelectedGenres: number[]) => {
+      if (prevSelectedGenres.includes(ALL_GENRE_ID)) {
+        const filteredPrevSelectedGenres = filterPrevGenresIds(
+          prevSelectedGenres,
+          ALL_GENRE_ID
+        );
+        return [...filteredPrevSelectedGenres, genreId];
+      } else if (prevSelectedGenres.includes(genreId)) {
+        const filteredPrevSelectedGenres = filterPrevGenresIds(
+          prevSelectedGenres,
+          genreId
+        );
+
+        return prevSelectedGenres.length === 1
+          ? [ALL_GENRE_ID]
+          : [...filteredPrevSelectedGenres];
+      }
+      return [...prevSelectedGenres, genreId];
+    });
+  };
+
+  const handleSearch = () => {
+    if (searchText && !isSearching) {
+      refetch();
+    }
   };
 
   return (
     <div className="w-full h-[150px] bg-gray-800 p-4 flex flex-col justify-between">
-      <h1
-        className="text-red-600 text-left rounded-full w-24"
-        style={{ textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)" }}
-      >
-        {APP_TITLE.toUpperCase()}
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1
+          className="text-red-600 text-left rounded-full w-24"
+          style={{ textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)" }}
+        >
+          {APP_TITLE.toUpperCase()}
+        </h1>
+        <div className="flex items-center">
+          <div className="relative right-4">
+            <input
+              type="text"
+              placeholder="Movie Name"
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+                if (!e.target.value) {
+                  setSearchedResults({});
+                }
+              }}
+              className="text-white bg-gray-700 px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
+            />
+            {searchText && (
+              <button
+                className="text-white ml-2 absolute right-4 top-[3px]"
+                onClick={() => {
+                  setSearchText("");
+                  setSearchedResults({});
+                }}
+              >
+                &#10005; {/* Unicode character for cross (×) */}
+              </button>
+            )}
+          </div>
+
+          <button
+            className="text-white bg-red-600 px-2 py-1 rounded-lg"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+        </div>
+      </div>
+
       <div className="flex gap-4 overflow-x-auto no-scrollbar">
         <GenreContainer
           id={ALL_GENRE_ID}
           name={"All"}
-          isActive={ALL_GENRE_ID === selectedGenre}
+          isActive={selectedGenres.includes(ALL_GENRE_ID)}
           handleGenreClick={handleGenreClick}
         />
         {genres?.map((genre: Genre) => (
@@ -74,7 +175,7 @@ const Header = () => {
             key={genre.id}
             id={genre.id}
             name={genre.name}
-            isActive={genre.id === selectedGenre}
+            isActive={selectedGenres.includes(genre.id)}
             handleGenreClick={handleGenreClick}
           />
         ))}
