@@ -61,7 +61,7 @@ const MovieCard = ({
         <div className="flex w-full min-h-24">
           <div className="absolute top-[-50px]">
             <img
-              className="object-cover w-[33%] rounded-2xl shadow-lg"
+              className="object-cover w-[25%] rounded-2xl shadow-lg"
               src={`https://image.tmdb.org/t/p/w500${posterPath}`}
               alt={title}
             />
@@ -82,13 +82,13 @@ const MovieCard = ({
             </div>
           </div>
         </div>
-        <div className="text-left mt-1">
+        <div className="text-left mt-7">
           <p>
             {overview.length > 150 ? `${overview.slice(0, 150)}...` : overview}
           </p>
         </div>
         <div
-          className="text-left mt-3 flex gap-2 items-center cursor-pointer"
+          className="text-left mt-6 flex gap-2 items-center cursor-pointer"
           onClick={handleShowCast}
         >
           <p className="text-sm font-bold">Cast and Credits</p>
