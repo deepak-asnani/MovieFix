@@ -6,8 +6,12 @@
    ```sh
    git clone https://github.com/deepak539/MovieFix.git
 
-2. Install the neccessary packages using npm install
-3. Start the Serve using npm start
+2. Install the neccessary packages
+   ```sh
+   npm install
+4. Start the Serve using
+   ```sh
+   npm start
 
 
 ## What is MovieFix?
