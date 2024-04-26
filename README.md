@@ -14,13 +14,14 @@
    ```sh
    npm start
 
-[Live Project](https://movie-diw7kirj9-deepaks-projects-6d0e29f0.vercel.app/)
 
 ## What is MovieFix?
 
 MovieFix is a web application developed as an assessment project for a Frontend Developer interview process.
 
 MovieFix lists movies by their release years and dynamically loads more movies on scroll without causing jitter. It provides options to filter movies by genres and includes a search functionality for finding desired movies directly.
+
+Click on [MovieFix](https://movie-diw7kirj9-deepaks-projects-6d0e29f0.vercel.app/) to watch the live demo without the hassle of running it on your local machine.
 
 ## Stack Used
 
