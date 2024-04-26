@@ -9,7 +9,8 @@
 2. Install the neccessary packages
    ```sh
    npm install
-4. Start the Serve using
+   
+4. Start the Server using
    ```sh
    npm start
 
