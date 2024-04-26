@@ -14,6 +14,7 @@
    ```sh
    npm start
 
+[Live Project](https://movie-diw7kirj9-deepaks-projects-6d0e29f0.vercel.app/)
 
 ## What is MovieFix?
 
