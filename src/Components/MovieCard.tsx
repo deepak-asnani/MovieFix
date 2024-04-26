@@ -14,7 +14,6 @@ const MovieCard = ({
   title,
   overview,
 }: MovieCardProps) => {
-
   const [cast, setCast] = useState<CreditTypes>({
     directors: [],
     writers: [],
@@ -40,7 +39,6 @@ const MovieCard = ({
     if (fetchedCredits?.directors.length) setCast(fetchedCredits);
   }, [fetchedCredits]);
 
-
   const handleShowCast = () => {
     if (!cast.directors.length) refetchCredits();
     setShowCast(!showCast);
@@ -54,26 +52,29 @@ const MovieCard = ({
 
   return (
     <div
-      className="bg-cover bg-center h-screen mb-8 rounded-[50px] bg-white shadow-lg flex flex-col-reverse"
+      className="bg-cover bg-center h-screen mb-8 rounded-[50px] shadow-lg flex flex-col-reverse"
       style={{
         backgroundImage: `url(https://image.tmdb.org/t/p/w500${posterPath})`,
       }}
     >
       <div className="bg-white px-4 py-2 rounded-[50px] min-h-96 relative flex flex-col">
-        <div className="flex w-full min-h-28">
+        <div className="flex w-full min-h-24">
           <div className="absolute top-[-50px]">
             <img
-              className="object-cover w-[33%] rounded-lg shadow-lg"
+              className="object-cover w-[33%] rounded-2xl shadow-lg"
               src={`https://image.tmdb.org/t/p/w500${posterPath}`}
               alt={title}
             />
           </div>
-          <div className="w-full flex place-content-end ">
+          <div className="w-full flex place-content-end">
             <div className="w-[65%]">
-              <h5 className="text-center font-bold text-sm mb-2">{title}</h5>
+              <p className="text-center font-bold text-sm mb-2">{title}</p>
               <div className="flex flex-wrap gap-1 mx-auto justify-center">
                 {genres.map((genreName) => (
-                  <p className="bg-gray-700 text-[10px] flex justify-center items-center text-white py-1 px-2 rounded-2xl  whitespace-nowrap">
+                  <p
+                    key={genreName}
+                    className="bg-gray-700 text-[10px] flex justify-center items-center text-white py-1 px-2 rounded-2xl  whitespace-nowrap"
+                  >
                     {genreName}
                   </p>
                 ))}
@@ -81,27 +82,16 @@ const MovieCard = ({
             </div>
           </div>
         </div>
-        <div
-          className="text-left hover:font-semibold mt-4 flex gap-2 items-center cursor-pointer"
-          onClick={handleShowDescription}
-        >
-          <p>Description</p>
-          <i
-            className={
-              showDescription ? "fa-solid fa-angle-up" : "fa-solid fa-angle-down"
-            }
-          ></i>
+        <div className="text-left mt-1">
+          <p>
+            {overview.length > 150 ? `${overview.slice(0, 150)}...` : overview}
+          </p>
         </div>
-        {showDescription ? (
-          <>{overview.length > 200 ? overview.slice(0, 100) : overview}</>
-        ) : (
-          <></>
-        )}
         <div
-          className="text-left hover:font-semibold mt-4 flex gap-2 items-center cursor-pointer"
+          className="text-left mt-3 flex gap-2 items-center cursor-pointer"
           onClick={handleShowCast}
         >
-          <p>Cast and Credits</p>
+          <p className="text-sm font-bold">Cast and Credits</p>
           <i
             className={
               showCast ? "fa-solid fa-angle-up" : "fa-solid fa-angle-down"
@@ -111,11 +101,14 @@ const MovieCard = ({
         {areCreditsFetching && <>fetching credits.....</>}
         {showCast && cast.directors.length ? (
           <>
-            {Object.keys(cast).map((castType: string) => {
+            {Object.keys(cast).map((castType: string, index) => {
               return (
-                <div className="text-left flex gap-2 mt-2">
-                  <h1 className="capitalize font-semibold">{`${castType}:`}</h1>
-                  <p>
+                <div
+                  key={`${castType}-${index}`}
+                  className="text-left flex gap-2 mt-1"
+                >
+                  <h1 className="capitalize font-semibold text-sm">{`${castType}:`}</h1>
+                  <p className="text-sm">
                     {(cast[castType as keyof CreditTypes] || []).join(", ")}
                   </p>
                 </div>

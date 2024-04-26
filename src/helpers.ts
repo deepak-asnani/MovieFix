@@ -21,28 +21,7 @@ export const getMoviesAPI = ({
   return updatedMoviesAPI;
 };
 
-export const fetchMovies = async ({
-  primaryReleaseYear,
-  votesPopularity,
-  page,
-  selectedGenres,
-}: MoviesAPIParams) => {
-  const moviesAPI = getMoviesAPI({
-    primaryReleaseYear,
-    votesPopularity,
-    page,
-    selectedGenres,
-  });
-  const response = await fetch(moviesAPI, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-      Accept: "application/json",
-    },
-  });
-  const moviesData = await response.json();
-  return moviesData.results;
-};
+
 
 export const getParsedMovies = (fetchedMovies: any) => {
   const updatedMovies = fetchedMovies.map((movie: any) => {
@@ -66,6 +45,29 @@ export const getParsedMovies = (fetchedMovies: any) => {
   });
   updatedMovies.sort((a: Movie, b: Movie) => b.popularity - a.popularity);
   return updatedMovies;
+};
+
+export const fetchMovies = async ({
+  primaryReleaseYear,
+  votesPopularity,
+  page,
+  selectedGenres,
+}: MoviesAPIParams) => {
+  const moviesAPI = getMoviesAPI({
+    primaryReleaseYear,
+    votesPopularity,
+    page,
+    selectedGenres,
+  });
+  const response = await fetch(moviesAPI, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+      Accept: "application/json",
+    },
+  });
+  const moviesData = await response.json();
+  return getParsedMovies(moviesData.results);
 };
 
 const getParsedCredits = (response: any) => {

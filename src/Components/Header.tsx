@@ -80,6 +80,8 @@ const Header = () => {
     setSearchedResults(searchedMovies);
   }, [searchedMovies]);
 
+  /* filters previous genres Ids- It's a reusable function,
+   which takes previous value of selected genres id's and the id which needs to be filtered out */
   const filterPrevGenresIds = (
     prevSelectedGenreIds: number[],
     exclusiveGenreId: number
@@ -90,27 +92,38 @@ const Header = () => {
     return filteredPrevSelectedGenres;
   };
 
+  /* After clicking on genre, whether the the genre should be selected or deselected,
+   also manages the selectedGenresState */
   const handleGenreClick = (genreId: number) => {
+    console.log("inside handle genre click:- ", genreId);
     setSelectedGenres((prevSelectedGenres: number[]) => {
+      console.log("prev selected genres:- ", prevSelectedGenres);
       if (prevSelectedGenres.includes(ALL_GENRE_ID)) {
+        console.log("inside if----")
         const filteredPrevSelectedGenres = filterPrevGenresIds(
           prevSelectedGenres,
           ALL_GENRE_ID
         );
+        console.log("filtered prev selected genres id:- ", filterPrevGenresIds);
         return [...filteredPrevSelectedGenres, genreId];
       } else if (prevSelectedGenres.includes(genreId)) {
+        console.log("-inside else if--------")
         const filteredPrevSelectedGenres = filterPrevGenresIds(
           prevSelectedGenres,
           genreId
         );
 
-        return prevSelectedGenres.length === 1
-          ? [ALL_GENRE_ID]
-          : [...filteredPrevSelectedGenres];
+        console.log("filtered prev selected genres ids:- ", filteredPrevSelectedGenres);
+
+        return filteredPrevSelectedGenres.length
+          ? [...filteredPrevSelectedGenres]
+          : [ALL_GENRE_ID];
       }
       return [...prevSelectedGenres, genreId];
     });
   };
+
+  console.log("selected genres:- ", selectedGenres);
 
   const handleSearch = () => {
     if (searchText && !isSearching) {

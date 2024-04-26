@@ -4,7 +4,7 @@ import { fetchMovies, getParsedMovies } from "../helpers";
 import MovieContext from "../context/MovieContext";
 import MovieCard from "./MovieCard";
 import { Genre, Movie } from "../types";
-import { DEFAULT_YEAR } from "../constants";
+import { ALL_GENRE_ID, DEFAULT_YEAR } from "../constants";
 
 const renderMovies = (
   releasedYear: number,
@@ -12,6 +12,7 @@ const renderMovies = (
   genres: Array<Genre>
 ) => {
   const movies = moviesList[releasedYear];
+  console.log("movies:- ", movies);
   return (
     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {movies.map((movie: Movie) => {
@@ -51,7 +52,7 @@ const Movies = () => {
     isLoading: areMoviesFetching,
     isError: moviesFetchError,
   } = useQuery({
-    queryKey: ["movies", currentScrolledYear, selectedGenres],
+    queryKey: ["movies", currentScrolledYear],
     queryFn: () =>
       fetchMovies({
         primaryReleaseYear: currentScrolledYear,
@@ -59,6 +60,23 @@ const Movies = () => {
         page,
         selectedGenres,
       }),
+    enabled: searchedResults && !Object.keys(searchedResults).length,
+  });
+
+  const {
+    data: selectedGenresMovies,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["selectedGenresMovies", selectedGenres],
+    queryFn: () =>
+      fetchMovies({
+        primaryReleaseYear: currentScrolledYear,
+        votesPopularity,
+        page,
+        selectedGenres,
+      }),
+    enabled: !!selectedGenres.length && !selectedGenres.includes(ALL_GENRE_ID),
   });
 
   useEffect(() => {
@@ -69,17 +87,35 @@ const Movies = () => {
 
   useEffect(() => {
     if (fetchedMovies?.length) {
-      const parsedMovies = getParsedMovies(fetchedMovies);
-      const releasedYear = new Date(parsedMovies[0].releaseDate).getFullYear();
+      const releasedYear = new Date(fetchedMovies[0].releaseDate).getFullYear();
       setMoviesList((prevMoviesList) => {
         const updatedMoviesList = {
           ...prevMoviesList,
-          [releasedYear]: [...parsedMovies],
+          [releasedYear]: [...fetchedMovies],
         };
         return updatedMoviesList;
       });
     }
   }, [fetchedMovies]);
+
+  useEffect(() => {
+    if (selectedGenresMovies) {
+      const releasedYear = new Date(
+        selectedGenresMovies[0]?.releaseDate
+      ).getFullYear();
+      if (releasedYear) {
+        setFilteredMoviesList((prevFilteredMoviesList) => {
+          const updatedMoviesList = {
+            [releasedYear]: [...selectedGenresMovies],
+          };
+          console.log("updatedMoviesList:- ", updatedMoviesList);
+          return updatedMoviesList;
+        });
+      } else {
+        setFilteredMoviesList({});
+      }
+    }
+  }, [selectedGenresMovies]);
 
   const handleScroll = (event: any) => {
     if (areMoviesFetching) return;
@@ -95,13 +131,14 @@ const Movies = () => {
       setCurrentScrolledYear((prevYear) => prevYear - 1);
     }
   };
-  
+
   const moviesToRender =
     searchedResults && Object.keys(searchedResults).length
       ? searchedResults
       : filteredMoviesList;
 
   if (moviesFetchError) return <div>Error fetching data</div>;
+  if(!Object.keys(moviesToRender).length) return <>No movies available for this search results/filtered genres</>
 
   return (
     <div
