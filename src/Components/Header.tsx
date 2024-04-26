@@ -133,7 +133,7 @@ const Header = () => {
 
   return (
     <div className="w-full h-[150px] bg-gray-800 p-4 flex flex-col justify-between">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-4">
         <h1
           className="text-red-600 text-left rounded-full w-24"
           style={{ textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)" }}
