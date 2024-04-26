@@ -142,7 +142,7 @@ const Movies = () => {
 
   return (
     <div
-      className="bg-gray-400 p-4  overflow-y-scroll h-[100vh]"
+      className="bg-gray-400 p-4  overflow-y-scroll h-[100vh] no-scrollbar"
       onScroll={handleScroll}
     >
       {Object.keys(moviesToRender).map((releasedYear) => {
