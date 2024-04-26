@@ -1,46 +1,53 @@
-# Getting Started with Create React App
+# MovieFix App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## How to Run Locally
 
-## Available Scripts
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/deepak539/MovieFix.git
 
-In the project directory, you can run:
+2. Install the neccessary packages
+   ```sh
+   npm install
+   
+4. Start the Server using
+   ```sh
+   npm start
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## What is MovieFix?
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+MovieFix is a web application developed as an assessment project for a Frontend Developer interview process.
 
-### `npm test`
+MovieFix lists movies by their release years and dynamically loads more movies on scroll without causing jitter. It provides options to filter movies by genres and includes a search functionality for finding desired movies directly.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Click on [MovieFix](https://movie-diw7kirj9-deepaks-projects-6d0e29f0.vercel.app/) to watch the live demo without the hassle of running it on your local machine.
 
-### `npm run build`
+## Stack Used
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **React.js**: Component-based approach and virtual DOM for improved performance.
+- **TypeScript**: To catch errors during coding.
+- **Context API and useContext**: For state management.
+- **Tailwind CSS**: For styling components.
+- **React Query**: For fetching data from an API.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Basic Requirements Implemented
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Lists movies for the default year.
+- Loads more movies on scroll without jitter.
+- Filters movies by genre.
+- Search functionality.
 
-### `npm run eject`
+## Known Bugs
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Slight jittering when scrolling to the top sometimes.
+- Connection between genres and fetching more movies on scroll may disrupt the flow.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Areas for Improvement
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Address known bugs.
+2. Utilize component libraries like Theme UI or Shadcn for faster development and improved UI.
+3. Enhance the display of movie credits and short descriptions.
+4. Display movie ratings on cards using stars.
+5. Consider using Redux for state management, although Context API suffices for managing few states with less boilerplate.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
