@@ -10,8 +10,6 @@
 3. Start the Serve using npm start
 
 
-# MovieFix App
-
 ## What is MovieFix?
 
 MovieFix is a web application developed as an assessment project for a Frontend Developer interview process.
